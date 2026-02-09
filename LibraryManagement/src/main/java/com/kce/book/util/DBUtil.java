@@ -1,58 +1,21 @@
 package com.kce.book.util;
 
 import java.sql.Connection;
-
 import java.sql.DriverManager;
-
-import java.sql.SQLException;
-
-
 
 public class DBUtil {
 
-	 private static final String URL = "jdbc:oracle:thin:@localhost:1521:XE"; 
+    public static Connection getDBConnection() {
 
-	    private static final String USER = "system";
-
-	    private static final String PASSWORD = "admin";
-
-
-
-	    static {
-
-	        try {
-
-	            Class.forName("oracle.jdbc.driver.OracleDriver"); 
-
-	        } catch (ClassNotFoundException e) {
-
-	            e.printStackTrace();
-
-	        }
-
-	    }
-
-
-
-	    public static Connection getConnection() {
-
-	        try {
-
-	        	Connection con = DriverManager.getConnection(URL, USER, PASSWORD);
-
-	        	con.commit();
-
-	            return con;
-
-	        } catch (SQLException e) {
-
-	            e.printStackTrace();  
-
-	        }
-
-	        return null;
-
-	    }
-
+        try {
+            Class.forName("oracle.jdbc.driver.OracleDriver");
+            return DriverManager.getConnection(
+                    "jdbc:oracle:thin:@localhost:1521:xe",
+                    "pavi",
+                    "pass123");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
-

@@ -2,73 +2,49 @@ package com.kce.book.bean;
 
 public class BookBean {
 
-	private String isbn;
+    private String isbn;
+    private String bookName;
+    private AuthorBean author;
+    private char bookType;
+    private float cost;
 
-	private String bookname;
+    public String getIsbn() {
+        return isbn;
+    }
 
-	private AuthorBean author;
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
 
-	private char bookType;
+    public String getBookName() {
+        return bookName;
+    }
 
-	private float cost;
+    public void setBookName(String bookName) {
+        this.bookName = bookName;
+    }
 
-	public String getIsbn() {
+    public AuthorBean getAuthor() {
+        return author;
+    }
 
-		return isbn;
+    public void setAuthor(AuthorBean author) {
+        this.author = author;
+    }
 
-	}
+    public char getBookType() {
+        return bookType;
+    }
 
-	public void setIsbn(String isbn) {
+    public void setBookType(char bookType) {
+        this.bookType = bookType;
+    }
 
-		this.isbn = isbn;
+    public float getCost() {
+        return cost;
+    }
 
-	}
-
-	public String getBookname() {
-
-		return bookname;
-
-	}
-
-	public void setBookname(String bookname) {
-
-		this.bookname = bookname;
-
-	}
-
-	public AuthorBean getAuthor() {
-
-		return author;
-
-	}
-
-	public void setAuthor(AuthorBean author) {
-
-		this.author = author;
-
-	}
-
-	public char getBookType() {
-
-		return bookType;
-
-	}
-
-	public void setBookType(char bookType) {
-
-		this.bookType = bookType;
-
-	}
-
-	public float getCost() {
-
-		return cost;
-
-	}
-
-	public void setCost(float cost) {
-
-		this.cost = cost;
-
-	}
+    public void setCost(float cost) {
+        this.cost = cost;
+    }
 }

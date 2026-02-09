@@ -4,57 +4,56 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import com.kce.book.util.DBUtil;
 import com.kce.book.bean.AuthorBean;
+import com.kce.book.util.DBUtil;
 
 public class AuthorDAO {
 
-    
-    public static AuthorBean getAuthor(int authorCode) {
-        String sql = "SELECT * FROM Author_tbl WHERE author_code = ?";
-        AuthorBean authorbean = null;
+    public AuthorBean getAuthor(String authorName) {
 
-        try (Connection con = DBUtil.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        AuthorBean author = null;
+        String query = "SELECT * FROM Author_Table WHERE Author_name=?";
 
-            ps.setInt(1, authorCode);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                authorbean = new AuthorBean();
-                authorbean.setAuthorCode(rs.getInt("author_code"));
-                authorbean.setAuthorName(rs.getString("author_name"));
-                authorbean.setContactNo(rs.getLong("contact_no"));
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return authorbean;
-    }
-
-    public static AuthorBean getAuthor(String authorName) {
-        String sql = "SELECT * FROM AUTHOR_TBL WHERE AUTHOR_NAME = ?";
-        AuthorBean authorbean = null;
-
-        try (Connection con = DBUtil.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBUtil.getDBConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
 
             ps.setString(1, authorName);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                authorbean = new AuthorBean();
-                authorbean.setAuthorCode(rs.getInt("AUTHOR_CODE"));
-                authorbean.setAuthorName(rs.getString("AUTHOR_NAME"));
-                authorbean.setContactNo(rs.getLong("CONTACT_NO"));
+                author = new AuthorBean();
+                author.setAuthorCode(rs.getInt("Author_code"));
+                author.setAuthorName(rs.getString("Author_name"));
+                author.setContactNo(rs.getLong("Contact_no"));
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return authorbean;
+        return author;
     }
 
+    public AuthorBean getAuthor(int authorCode) {
+
+        AuthorBean author = null;
+        String query = "SELECT * FROM Author_Table WHERE Author_code=?";
+
+        try (Connection con = DBUtil.getDBConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+
+            ps.setInt(1, authorCode);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                author = new AuthorBean();
+                author.setAuthorCode(rs.getInt("Author_code"));
+                author.setAuthorName(rs.getString("Author_name"));
+                author.setContactNo(rs.getLong("Contact_no"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return author;
+    }
 }

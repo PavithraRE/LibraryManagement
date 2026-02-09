@@ -2,9 +2,13 @@ package com.kce.book.servlets;
 
 import java.io.IOException;
 
-import jakarta.servlet.*;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import com.kce.book.bean.BookBean;
 import com.kce.book.dao.AuthorDAO;
@@ -17,37 +21,20 @@ public class MainServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String operation = request.getParameter("operation");
+
         if ("AddBook".equals(operation)) {
 
-            String isbn = request.getParameter("isbn");
-            String bookName = request.getParameter("bookname");
-            String bookTypeStr = request.getParameter("booktype");
-            String authorName = request.getParameter("authorname");
-            String costStr = request.getParameter("cost");
+            String result = addBook(request);
 
-            System.out.println("ISBN = " + isbn);
-            System.out.println("BookName = " + bookName);
-            System.out.println("BookType = " + bookTypeStr);
-            System.out.println("AuthorName = " + authorName);
-            System.out.println("Cost = " + costStr);
+            if ("SUCCESS".equals(result))
+                response.sendRedirect("Menu.html");
+            else if ("INVALID".equals(result))
+                response.sendRedirect("Invalid.html");
+            else
+                response.sendRedirect("Failure.html");
 
-            BookBean book = new BookBean();
-            book.setIsbn(isbn);
-            book.setBookname(bookName);
+        } else if ("Search".equals(operation)) {
 
-            if (bookTypeStr != null && !bookTypeStr.isEmpty()) {
-                book.setBookType(bookTypeStr.charAt(0));
-            }
-
-            book.setCost(Float.parseFloat(costStr));
-            book.setAuthor(AuthorDAO.getAuthor(authorName));
-
-            String res = new Administrator().addBook(book);
-            response.sendRedirect(res + ".html");
-        }
-
-
-        if ("Search".equals(operation)) {
             String isbn = request.getParameter("isbn");
             BookBean book = new Administrator().viewBook(isbn);
 
@@ -56,8 +43,33 @@ public class MainServlet extends HttpServlet {
             } else {
                 HttpSession session = request.getSession();
                 session.setAttribute("book", book);
-                response.sendRedirect("ViewServlet");
+                RequestDispatcher rd = request.getRequestDispatcher("ViewServlet");
+                rd.forward(request, response);
             }
         }
+    }
+
+    private String addBook(HttpServletRequest request) {
+
+        String isbn = request.getParameter("isbn");
+        String bookName = request.getParameter("bookName");
+        String bookType = request.getParameter("bookType");
+        String authorName = request.getParameter("authorName");
+        String cost = request.getParameter("cost");
+
+        if (isbn == null || bookName == null || bookType == null ||
+            authorName == null || cost == null)
+            return "INVALID";
+
+        BookBean book = new BookBean();
+        book.setIsbn(isbn);
+        book.setBookName(bookName);
+        book.setBookType(bookType.charAt(0));
+        book.setCost(Float.parseFloat(cost));
+
+        AuthorDAO dao = new AuthorDAO();
+        book.setAuthor(dao.getAuthor(authorName));
+
+        return new Administrator().addBook(book);
     }
 }

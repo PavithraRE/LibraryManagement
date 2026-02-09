@@ -1,49 +1,35 @@
 package com.kce.book.service;
 
 import com.kce.book.bean.BookBean;
-
 import com.kce.book.dao.BookDAO;
-
-
 
 public class Administrator {
 
-	
+    public String addBook(BookBean book) {
 
-	  private BookDAO bookDAO = new BookDAO();
+        if (book == null)
+            return "INVALID";
 
-	  public String addBook(BookBean bookBean) {
+        if (book.getIsbn() == null || book.getIsbn().isEmpty())
+            return "INVALID";
 
-		    if (bookBean == null ||
-		        bookBean.getBookname() == null || bookBean.getBookname().isEmpty() ||
-		        bookBean.getIsbn() == null || bookBean.getIsbn().isEmpty() ||
-		        !(bookBean.getBookType() == 'G' || bookBean.getBookType() == 'T') ||
-		        bookBean.getCost() <= 0 ||
-		        bookBean.getAuthor() == null ||
-		        bookBean.getAuthor().getAuthorName() == null ||
-		        bookBean.getAuthor().getAuthorName().isEmpty()) {
+        if (book.getBookName() == null || book.getBookName().isEmpty())
+            return "INVALID";
 
-		        return "Invalid";
-		    }
+        if (book.getAuthor() == null)
+            return "INVALID";
 
-		    int res = bookDAO.createBook(bookBean);
+        if (book.getCost() <= 0)
+            return "INVALID";
 
-		    return (res == 1) ? "Success" : "Failure";
-		}
+        if (book.getBookType() != 'G' && book.getBookType() != 'T')
+            return "INVALID";
 
+        BookDAO dao = new BookDAO();
+        return dao.createBook(book) > 0 ? "SUCCESS" : "FAILURE";
+    }
 
-
-	public BookBean viewBook(String isbn) {
-
-		BookBean bookBean=new BookDAO().fetchBook(isbn);
-
-		return bookBean;
-
-	
-		
-
-	}
-
-	
-
+    public BookBean viewBook(String isbn) {
+        return new BookDAO().fetchBook(isbn);
+    }
 }
